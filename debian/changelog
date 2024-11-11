@@ -1,3 +1,79 @@
+golang-github-prometheus-procfs (0.14.0-1) unstable; urgency=medium
+
+  * New upstream release
+  * Bump golang-any version constraint (>= 2:1.20~) due to use of %w verbs in
+    fmt.Errorf()
+
+ -- Daniel Swarbrick <dswarbrick@debian.org>  Sun, 21 Apr 2024 13:14:54 +0000
+
+golang-github-prometheus-procfs (0.13.0-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Daniel Swarbrick <dswarbrick@debian.org>  Thu, 07 Mar 2024 15:03:12 +0000
+
+golang-github-prometheus-procfs (0.12.0-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Daniel Swarbrick <dswarbrick@debian.org>  Fri, 22 Sep 2023 21:01:21 +0000
+
+golang-github-prometheus-procfs (0.11.1-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/control: drop B+R for ancient version of golang-procfs-dev
+  * Convert patches to gbp-pq format
+
+ -- Daniel Swarbrick <dswarbrick@debian.org>  Fri, 28 Jul 2023 20:33:35 +0000
+
+golang-github-prometheus-procfs (0.11.0-2) unstable; urgency=medium
+
+  * Patch out int32 overflow in testdata
+
+ -- Daniel Swarbrick <dswarbrick@debian.org>  Sun, 18 Jun 2023 17:01:17 +0000
+
+golang-github-prometheus-procfs (0.11.0-1) unstable; urgency=medium
+
+  * New upstream release
+  * Bump Standards-Version to 4.6.2 (no changes)
+  * Drop obsolete golang-procfs-dev binary package (Closes: #1038245)
+  * Refresh patches
+
+ -- Daniel Swarbrick <dswarbrick@debian.org>  Fri, 16 Jun 2023 16:25:08 +0000
+
+golang-github-prometheus-procfs (0.8.0-3) unstable; urgency=medium
+
+  * Patch actual testdata so as not to overflow ints on 32-bit archs
+
+ -- Daniel Swarbrick <dswarbrick@debian.org>  Tue, 06 Sep 2022 08:24:42 +0000
+
+golang-github-prometheus-procfs (0.8.0-2) unstable; urgency=medium
+
+  * Add new 02-proc-stat-test-int64.patch to fix failing tests on 32-bit archs
+
+ -- Daniel Swarbrick <dswarbrick@debian.org>  Tue, 06 Sep 2022 00:30:42 +0000
+
+golang-github-prometheus-procfs (0.8.0-1) unstable; urgency=medium
+
+  * New upstream release
+  * Drop obsolete Add-support-for-DMI-information.patch (applied upstream)
+  * Add new 01-fix-testdata-paths.patch
+  * Bump Standards-Version to 4.6.1 (no changes)
+
+ -- Daniel Swarbrick <dswarbrick@debian.org>  Mon, 05 Sep 2022 14:32:44 +0000
+
+golang-github-prometheus-procfs (0.7.3-2) unstable; urgency=medium
+
+  * Team upload.
+  * Update gbp.conf following latest Go Team workflow.
+  * Update debian/watch file.
+  * Use dh-sequence-golang instead of dh-golang and --with=golang.
+  * Remove ${shlibs:Depends} from -dev Depends field.
+  * Do not install uninteresting documentation.
+  * Update copyright claims.
+
+ -- Guillem Jover <gjover@sipwise.com>  Tue, 22 Mar 2022 21:43:25 +0100
+
 golang-github-prometheus-procfs (0.7.3-1) unstable; urgency=medium
 
   * Team upload.

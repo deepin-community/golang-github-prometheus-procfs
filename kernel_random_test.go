@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build !windows
 // +build !windows
 
 package procfs
@@ -19,7 +20,7 @@ import (
 	"testing"
 )
 
-const procfsFixtures = "fixtures/proc"
+const procfsFixtures = "testdata/fixtures/proc"
 
 func TestKernelRandom(t *testing.T) {
 	fs, err := NewFS(procfsFixtures)

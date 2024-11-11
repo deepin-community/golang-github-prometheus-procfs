@@ -14,6 +14,7 @@
 package procfs
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -35,6 +36,7 @@ func TestProcStatus(t *testing.T) {
 	}{
 		{name: "Pid", want: 26231, have: s.PID},
 		{name: "Tgid", want: 26231, have: s.TGID},
+		{name: "NSpid", want: 1, have: int(s.NSpids[0])},
 		{name: "VmPeak", want: 58472 * 1024, have: int(s.VmPeak)},
 		{name: "VmSize", want: 58440 * 1024, have: int(s.VmSize)},
 		{name: "VmLck", want: 0 * 1024, have: int(s.VmLck)},
@@ -76,6 +78,20 @@ func TestProcStatusName(t *testing.T) {
 	}
 }
 
+func TestProcStatusNameTrim(t *testing.T) {
+	p, err := getProcFixtures(t).Proc(26235)
+	if err != nil {
+		t.Fatal(err)
+	}
+	s, err := p.NewStatus()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want, have := "kube-proxy", s.Name; want != have {
+		t.Errorf("want name %s, have %s", want, have)
+	}
+}
+
 func TestProcStatusUIDs(t *testing.T) {
 	p, err := getProcFixtures(t).Proc(26231)
 	if err != nil {
@@ -87,8 +103,8 @@ func TestProcStatusUIDs(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if want, have := [4]string{"1000", "1000", "1000", "0"}, s.UIDs; want != have {
-		t.Errorf("want uids %s, have %s", want, have)
+	if want, have := [4]uint64{1000, 1000, 1000, 0}, s.UIDs; want != have {
+		t.Errorf("want uids %v, have %v", want, have)
 	}
 }
 
@@ -103,7 +119,23 @@ func TestProcStatusGIDs(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if want, have := [4]string{"1001", "1001", "1001", "0"}, s.GIDs; want != have {
-		t.Errorf("want uids %s, have %s", want, have)
+	if want, have := [4]uint64{1001, 1001, 1001, 0}, s.GIDs; want != have {
+		t.Errorf("want gids %v, have %v", want, have)
+	}
+}
+
+func TestCpusAllowedList(t *testing.T) {
+	p, err := getProcFixtures(t).Proc(26231)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	s, err := p.NewStatus()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if want, have := []uint64{0, 1, 2, 3, 4, 5, 6, 7}, s.CpusAllowedList; !reflect.DeepEqual(want, have) {
+		t.Errorf("want CpusAllowedList %v, have %v", want, have)
 	}
 }

@@ -1,0 +1,43 @@
+From: Daniel Swarbrick <dswarbrick@debian.org>
+Date: Fri, 28 Jul 2023 22:28:21 +0200
+Subject: Fix overflowing test data
+
+Bug: https://github.com/prometheus/procfs/pull/404/files#r963162202
+Last-Update: 2023-06-18
+
+Since the ProcStat struct uses int types for CUTime and CSTime, the supplied
+test data will overflow these on 32-bit archs. This patch reduces the
+magniture of the test data to fit within 32-bit ints.
+---
+ proc_stat_test.go      | 4 ++--
+ testdata/fixtures.ttar | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/proc_stat_test.go b/proc_stat_test.go
+index 8abd67f..24323d4 100644
+--- a/proc_stat_test.go
++++ b/proc_stat_test.go
+@@ -95,8 +95,8 @@ func TestProcStatLimits(t *testing.T) {
+ 		want int
+ 		have int
+ 	}{
+-		{name: "waited for children user time", want: math.MinInt64, have: s.CUTime},
+-		{name: "waited for children system time", want: math.MaxInt64, have: s.CSTime},
++		{name: "waited for children user time", want: math.MinInt32, have: s.CUTime},
++		{name: "waited for children system time", want: math.MaxInt32, have: s.CSTime},
+ 	} {
+ 		if test.want != test.have {
+ 			t.Errorf("want %s %d, have %d", test.name, test.want, test.have)
+diff --git a/testdata/fixtures.ttar b/testdata/fixtures.ttar
+index ae2e0f0..31b8ca4 100644
+--- a/testdata/fixtures.ttar
++++ b/testdata/fixtures.ttar
+@@ -762,7 +762,7 @@ SymlinkTo: /does/not/exist
+ # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ Path: fixtures/proc/26232/stat
+ Lines: 1
+-33 (ata_sff) S 2 0 0 0 -1 69238880 0 0 0 0 0 0 -9223372036854775808 9223372036854775807 0 -20 1 0 5 0 0 18446744073709551615 0 0 0 0 0 0 0 2147483647 0 18446744073709551615 0 0 -9223372036854775808 9223372036854775807 0 0 0 0 0 0 0 0 0 0 0 0 0
++33 (ata_sff) S 2 0 0 0 -1 69238880 0 0 0 0 0 0 -2147483648 2147483647 0 -20 1 0 5 0 0 18446744073709551615 0 0 0 0 0 0 0 2147483647 0 18446744073709551615 0 0 -2147483648 2147483647 0 0 0 0 0 0 0 0 0 0 0 0 0
+ Mode: 644
+ # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ Path: fixtures/proc/26232/wchan
