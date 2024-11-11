@@ -1,15 +1,15 @@
 #!/usr/bin/make -f
 
 # Uncomment this to turn on verbose mode.
-#export DH_VERBOSE = 1
+#export DH_VERBOSE := 1
 
 %:
-	dh $@ --buildsystem=golang --with=golang --builddir=build
+	dh $@ --builddir=_build --buildsystem=golang
 
 execute_before_dh_auto_test:
 	# Unpack test fixtures.
-	./ttar -C build/src/github.com/prometheus/procfs -x \
-	       -f fixtures.ttar
+	./ttar -C _build/src/github.com/prometheus/procfs/testdata \
+      -x -f testdata/fixtures.ttar
 
 execute_after_dh_auto_test:
-	rm -rf build/src/github.com/prometheus/procfs/fixtures
+	rm -rf _build/src/github.com/prometheus/procfs/testdata/fixtures

@@ -28,7 +28,7 @@ func Test_newNetUDP(t *testing.T) {
 	}{
 		{
 			name: "udp file found, no error should come up",
-			file: "fixtures/proc/net/udp",
+			file: "testdata/fixtures/proc/net/udp",
 			want: []*netIPSocketLine{
 				&netIPSocketLine{
 					Sl:        0,
@@ -41,6 +41,7 @@ func Test_newNetUDP(t *testing.T) {
 					RxQueue:   1,
 					UID:       0,
 					Inode:     2740,
+					Drops:     intToU64(100),
 				},
 				&netIPSocketLine{
 					Sl:        1,
@@ -53,6 +54,7 @@ func Test_newNetUDP(t *testing.T) {
 					RxQueue:   0,
 					UID:       0,
 					Inode:     2740,
+					Drops:     intToU64(100),
 				},
 				&netIPSocketLine{
 					Sl:        2,
@@ -65,13 +67,14 @@ func Test_newNetUDP(t *testing.T) {
 					RxQueue:   1,
 					UID:       0,
 					Inode:     2740,
+					Drops:     intToU64(100),
 				},
 			},
 			wantErr: false,
 		},
 		{
 			name: "udp6 file found, no error should come up",
-			file: "fixtures/proc/net/udp6",
+			file: "testdata/fixtures/proc/net/udp6",
 			want: []*netIPSocketLine{
 				&netIPSocketLine{
 					Sl:        1315,
@@ -84,6 +87,7 @@ func Test_newNetUDP(t *testing.T) {
 					RxQueue:   0,
 					UID:       981,
 					Inode:     21040,
+					Drops:     intToU64(0),
 				},
 				&netIPSocketLine{
 					Sl:        6073,
@@ -96,6 +100,7 @@ func Test_newNetUDP(t *testing.T) {
 					RxQueue:   0,
 					UID:       1000,
 					Inode:     11337031,
+					Drops:     intToU64(0),
 				},
 			},
 			wantErr: false,
@@ -108,7 +113,7 @@ func Test_newNetUDP(t *testing.T) {
 		},
 		{
 			name:    "error case - parse error",
-			file:    "fixtures/proc/net/udp_broken",
+			file:    "testdata/fixtures/proc/net/udp_broken",
 			want:    nil,
 			wantErr: true,
 		},
@@ -136,14 +141,14 @@ func Test_newNetUDPSummary(t *testing.T) {
 	}{
 		{
 			name:    "udp file found, no error should come up",
-			file:    "fixtures/proc/net/udp",
-			want:    &NetUDPSummary{TxQueueLength: 2, RxQueueLength: 2, UsedSockets: 3},
+			file:    "testdata/fixtures/proc/net/udp",
+			want:    &NetUDPSummary{TxQueueLength: 2, RxQueueLength: 2, UsedSockets: 3, Drops: intToU64(300)},
 			wantErr: false,
 		},
 		{
 			name:    "udp6 file found, no error should come up",
-			file:    "fixtures/proc/net/udp6",
-			want:    &NetUDPSummary{TxQueueLength: 0, RxQueueLength: 0, UsedSockets: 2},
+			file:    "testdata/fixtures/proc/net/udp6",
+			want:    &NetUDPSummary{TxQueueLength: 0, RxQueueLength: 0, UsedSockets: 2, Drops: intToU64(0)},
 			wantErr: false,
 		},
 		{
@@ -154,7 +159,7 @@ func Test_newNetUDPSummary(t *testing.T) {
 		},
 		{
 			name:    "error case - parse error",
-			file:    "fixtures/proc/net/udp_broken",
+			file:    "testdata/fixtures/proc/net/udp_broken",
 			want:    nil,
 			wantErr: true,
 		},
@@ -171,4 +176,10 @@ func Test_newNetUDPSummary(t *testing.T) {
 			}
 		})
 	}
+}
+
+// intToU64 convert int to uint64 and return it pointer.
+func intToU64(i int) *uint64 {
+	cast := uint64(i)
+	return &cast
 }
